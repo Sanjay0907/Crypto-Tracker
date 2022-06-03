@@ -1,6 +1,10 @@
 # crypto_tracker
 
-A new Flutter project.
+A Flutter Project to track Crypto Currency
+
+## Screens
+![crypto_tracker_screens](https://user-images.githubusercontent.com/90062803/171877312-99b44a70-50ec-46f6-b3f1-e67e21f6221a.png)
+
 
 ## Getting Started
 
