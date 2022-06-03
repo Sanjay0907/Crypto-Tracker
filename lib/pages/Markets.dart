@@ -1,10 +1,10 @@
-import 'package:crypto_tracker/Widgets/CryptoListTile.dart';
-import 'package:crypto_tracker/models/cryptocurrency.dart';
-import 'package:crypto_tracker/pages/DetailsPage.dart';
-import 'package:crypto_tracker/provider/market_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../Widgets/CryptoListTile.dart';
+import '../models/Cryptocurrency.dart';
+import '../providers/market_provider.dart';
 
 class Markets extends StatefulWidget {
   const Markets({Key? key}) : super(key: key);
@@ -24,29 +24,24 @@ class _MarketsState extends State<Markets> {
           );
         } else {
           if (marketProvider.markets.length > 0) {
-            // return Text('Data Found!');
             return RefreshIndicator(
               onRefresh: () async {
                 await marketProvider.fetchData();
               },
               child: ListView.builder(
                 physics: BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
+                    parent: AlwaysScrollableScrollPhysics()),
                 itemCount: marketProvider.markets.length,
                 itemBuilder: (context, index) {
                   CryptoCurrency currentCrypto = marketProvider.markets[index];
 
-                  return CryptoListtile(currentCrypto: currentCrypto);
-
-
+                  return CryptoListTile(currentCrypto: currentCrypto);
                 },
               ),
             );
           } else {
-            return Text('Data Not Found!');
+            return Text("Data not found!");
           }
-          // return Container();
         }
       },
     );

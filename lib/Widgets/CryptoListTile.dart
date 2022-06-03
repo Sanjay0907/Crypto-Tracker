@@ -1,29 +1,33 @@
-import 'package:crypto_tracker/models/cryptocurrency.dart';
-import 'package:crypto_tracker/pages/DetailsPage.dart';
-import 'package:crypto_tracker/provider/market_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CryptoListtile extends StatelessWidget {
-  // const CryptoListtile({Key? key}) : super(key: key);
+import '../models/Cryptocurrency.dart';
+import '../pages/DetailsPage.dart';
+import '../providers/graph_provider.dart';
+import '../providers/market_provider.dart';
 
+class CryptoListTile extends StatelessWidget {
   final CryptoCurrency currentCrypto;
 
-  const CryptoListtile({Key? key, required this.currentCrypto}) : super(key: key);
+  const CryptoListTile({Key? key, required this.currentCrypto})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
-    MarketProvider marketProvider = Provider.of<MarketProvider> (context, listen: false);
+    MarketProvider marketProvider =
+        Provider.of<MarketProvider>(context, listen: false);
 
     return ListTile(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailsPage(
-              id: currentCrypto.id!,
+            builder: (context) => ChangeNotifierProvider<GraphProvider>(
+              create: (context) => GraphProvider(),
+              child: DetailsPage(
+                id: currentCrypto.id.toString(),
+              ),
             ),
           ),
         );
@@ -36,34 +40,31 @@ class CryptoListtile extends StatelessWidget {
       title: Row(
         children: [
           Flexible(
-            child: Text(
-              currentCrypto.name!,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+              child:
+                  Text(currentCrypto.name!, overflow: TextOverflow.ellipsis)),
           SizedBox(
             width: 10,
           ),
-
-
-          (currentCrypto.isFavourite == false) ? GestureDetector(
-            onTap: () {
-              marketProvider.addFavourite(currentCrypto);
-            },
-            child: Icon(
-              CupertinoIcons.heart,
-              size: 20,
-            ),
-          ) : GestureDetector(
-            onTap: () {
-              marketProvider.removeFavourite(currentCrypto);
-            },
-            child: Icon(
-              CupertinoIcons.heart_fill,
-              size: 20,
-              color: Colors.redAccent,
-            ),
-          )
+          (currentCrypto.isFavorite == false)
+              ? GestureDetector(
+                  onTap: () {
+                    marketProvider.addFavorite(currentCrypto);
+                  },
+                  child: Icon(
+                    CupertinoIcons.heart,
+                    size: 18,
+                  ),
+                )
+              : GestureDetector(
+                  onTap: () {
+                    marketProvider.removeFavorite(currentCrypto);
+                  },
+                  child: Icon(
+                    CupertinoIcons.heart_fill,
+                    size: 18,
+                    color: Colors.red,
+                  ),
+                ),
         ],
       ),
       subtitle: Text(currentCrypto.symbol!.toUpperCase()),
@@ -72,35 +73,34 @@ class CryptoListtile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "₹ " +
-                currentCrypto.current_price!.toStringAsFixed(3),
+            "₹ " + currentCrypto.currentPrice!.toStringAsFixed(4),
             style: TextStyle(
-              fontWeight: FontWeight.bold,
               color: Color(0xff0395eb),
+              fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
-          Builder(builder: (context) {
-            double priceChange = currentCrypto.price_change_24h!;
-            double priceChangePercentage =
-            currentCrypto.price_change_percentage_24h!;
+          Builder(
+            builder: (context) {
+              double priceChange = currentCrypto.priceChange24!;
+              double priceChangePercentage =
+                  currentCrypto.priceChangePercentage24!;
 
-            if (priceChange < 0) {
-              return Text(
-                "${priceChangePercentage.toStringAsFixed(2)}% (${priceChange.toStringAsFixed(4)})",
-                style: TextStyle(
-                  color: Colors.red,
-                ),
-              );
-            } else {
-              return Text(
-                "+${priceChangePercentage.toStringAsFixed(2)}% (+${priceChange.toStringAsFixed(4)})",
-                style: TextStyle(
-                  color: Colors.green,
-                ),
-              );
-            }
-          })
+              if (priceChange < 0) {
+                // negative
+                return Text(
+                  "${priceChangePercentage.toStringAsFixed(2)}% (${priceChange.toStringAsFixed(4)})",
+                  style: TextStyle(color: Colors.red),
+                );
+              } else {
+                // positive
+                return Text(
+                  "+${priceChangePercentage.toStringAsFixed(2)}% (+${priceChange.toStringAsFixed(4)})",
+                  style: TextStyle(color: Colors.green),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

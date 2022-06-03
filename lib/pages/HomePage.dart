@@ -1,11 +1,10 @@
-import 'package:crypto_tracker/models/cryptocurrency.dart';
-import 'package:crypto_tracker/pages/DetailsPage.dart';
-import 'package:crypto_tracker/pages/Favourite.dart';
-import 'package:crypto_tracker/pages/Markets.dart';
-import 'package:crypto_tracker/provider/market_provider.dart';
-import 'package:crypto_tracker/provider/theme_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/theme_provider.dart';
+import 'Favorites.dart';
+import 'Markets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,6 +20,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     viewController = TabController(length: 2, vsync: this);
+
+    // Initialize HomePage Banner
+    // AdProvider adProvider = Provider.of<AdProvider>(context, listen: false);
+    // adProvider.initializeHomePageBanner();
   }
 
   @override
@@ -31,7 +34,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 0),
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,17 +59,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     onPressed: () {
                       themeProvider.toggleTheme();
                     },
-                    icon: (themeProvider.themeMode == ThemeMode.light
-                        ? Icon(
-                            Icons.dark_mode,
-                          )
-                        : Icon(Icons.light_mode)),
-                  )
+                    padding: EdgeInsets.all(0),
+                    icon: (themeProvider.themeMode == ThemeMode.light)
+                        ? Icon(Icons.dark_mode)
+                        : Icon(Icons.light_mode),
+                  ),
                 ],
               ),
-              // SizedBox(
-              //   height: 20,
-              // ),
               TabBar(
                 controller: viewController,
                 tabs: [
@@ -78,23 +77,42 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   Tab(
                     child: Text(
-                      "Favourites",
+                      "Favorites",
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
-                  )
+                  ),
                 ],
               ),
               Expanded(
-                child: TabBarView(physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                    controller: viewController, children: [
-                  Markets(),
-                  Favourites(),
-                ]),
-              )
+                child: TabBarView(
+                  physics: BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  controller: viewController,
+                  children: [
+                    Markets(),
+                    Favorites(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
+      // bottomNavigationBar: Consumer<AdProvider>(
+      //   builder: (context, adProvider, child) {
+
+      //     if(adProvider.isHomePageBannerLoaded) {
+      //       return Container(
+      //         height: adProvider.homePageBanner.size.height.toDouble(),
+      //         child: AdWidget(ad: adProvider.homePageBanner,),
+      //       );
+      //     }
+      //     else {
+      //       return Container(height: 0,);
+      //     }
+
+      //   },
+      // ),
     );
   }
 }

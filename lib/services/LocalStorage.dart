@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorage {
+
   static Future<bool> saveTheme(String theme) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool result = await sharedPreferences.setString("theme", theme);
@@ -14,28 +14,27 @@ class LocalStorage {
     return currentTheme;
   }
 
-  static Future<bool> addFavourite(String id) async {
+  static Future<bool> addFavorite(String id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    List<String> favourites =
-        sharedPreferences.getStringList("favorites") ?? [];
-    favourites.add(id);
+    List<String> favorites = sharedPreferences.getStringList("favorites") ?? [];
+    favorites.add(id);
 
-    return await sharedPreferences.setStringList("favorites", favourites);
+    return await sharedPreferences.setStringList("favorites", favorites);
   }
 
-  static Future<bool> removeFavourite(String id) async {
+  static Future<bool> removeFavorite(String id) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
 
-    List<String> favourites =
-        sharedPreferences.getStringList("favorites") ?? [];
-    favourites.remove(id);
+    List<String> favorites = sharedPreferences.getStringList("favorites") ?? [];
+    favorites.remove(id);
 
-    return await sharedPreferences.setStringList("favorites", favourites);
+    return await sharedPreferences.setStringList("favorites", favorites);
   }
 
-  static Future<List<String>> fetchFavourites() async {
+  static Future<List<String>> fetchFavorites() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getStringList("favorites") ?? [];
   }
+
 }

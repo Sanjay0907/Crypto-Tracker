@@ -1,6 +1,7 @@
-import 'package:crypto_tracker/models/LocalStorage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../services/LocalStorage.dart';
 
 class ThemeProvider with ChangeNotifier {
   late ThemeMode themeMode;
